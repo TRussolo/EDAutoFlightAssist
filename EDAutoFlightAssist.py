@@ -12,9 +12,7 @@ https://www.raspberrypi.org/forums/viewtopic.php?t=19969
 import pygame
 import sys
 import time
-from pyautogui import press
 import ctypes
-import time
 
 SendInput = ctypes.windll.user32.SendInput
 
@@ -111,31 +109,36 @@ print (_joystick.get_numhats())
 
 pressbit = 0
 
-while 1:
-    if pressbit == 1:
-        
-        pressbit = 0
-    pygame.event.get()
-    actual = ((_joystick.get_axis(1))+(actual*(total-1)))/total
-    
-    if ((actual >= 0.95) or (actual <= -0.95)):
-        
-        lasttoggle = toggle
-        toggle = 1
-    else:
-        lasttoggle = toggle      
-        toggle = 0
+try:
+    while True:
 
-    if (lasttoggle != toggle):
-        if toggle == 1:
-            print ("Flight assist off")
-            FlightAssistOff()
-            pressbit = 1
+        if pressbit == 1:
             
+            pressbit = 0
+        pygame.event.get()
+        actual = ((_joystick.get_axis(1))+(actual*(total-1)))/total
+        
+        if ((actual >= 0.95) or (actual <= -0.95)):
+            
+            lasttoggle = toggle
+            toggle = 1
         else:
-            print("Flight assist on")
-            FlightAssistOn()
-            pressbit = 1
-        lasttoggle = toggle
+            lasttoggle = toggle      
+            toggle = 0
+
+        if (lasttoggle != toggle):
+            if toggle == 1:
+                print ("Flight assist off")
+                FlightAssistOff()
+                pressbit = 1
+                
+            else:
+                print("Flight assist on")
+                FlightAssistOn()
+                pressbit = 1
+            lasttoggle = toggle
             
 
+
+except KeyboardInterrupt:
+    quit()
